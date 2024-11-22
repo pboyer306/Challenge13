@@ -1,24 +1,16 @@
 import { useState, useEffect } from 'react';
+import { Candidate } from "../interfaces/Candidate.interface";
 
-type GitHubUser = {
-  login: string;
-  avatar_url: string;
-  name: string | null;
-  location: string | null;
-  email: string | null;
-  html_url: string;
-  company: string | null;
-};
 
 
 const SavedCandidates = () => {
 
-  const [savedCandidates, setSavedCandidates] = useState<GitHubUser[]>([]);
+  const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
     const candidates = localStorage.getItem("savedCandidates");
     if (candidates) {
-      setSavedCandidates(JSON.parse(candidates) as GitHubUser[]);
+      setSavedCandidates(JSON.parse(candidates) as Candidate[]);
     }
   }, []);
 
