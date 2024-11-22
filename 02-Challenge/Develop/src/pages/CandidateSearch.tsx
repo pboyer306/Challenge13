@@ -1,24 +1,17 @@
 import { useState, useEffect } from 'react';
 import { searchGithub, searchGithubUser } from '../api/API';
 
-type GitHubUser = {
-  login: string;
-  avatar_url: string;
-  name: string | null;
-  location: string | null;
-  email: string | null;
-  html_url: string;
-  company: string | null;
-};
+import { Candidate } from "../interfaces/Candidate.interface";
+
 
 const [loading, setLoading] = useState<boolean>(false); //makes setLoading work
 const [username, setUsername] = useState<string>(''); //makes username work
 
 
 const CandidateSearch = () => {
-    const [currentCandidate, setCurrentCandidate] = useState<GitHubUser | null>(null);
-    const [savedCandidates, setSavedCandidates] = useState<GitHubUser[]>([]);
-    const [remainingCandidates, setRemainingCandidates] = useState<GitHubUser[]>([]);
+    const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(null);
+    const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
+    const [remainingCandidates, setRemainingCandidates] = useState<Candidate[]>([]);
 
     useEffect(() => {
       const fetchCandidates = async () => {
@@ -35,7 +28,7 @@ const CandidateSearch = () => {
       fetchCandidates();
     }, []);
 
-    const saveCandidate = (candidate: GitHubUser) => {
+    const saveCandidate = (candidate: Candidate) => {
       const updatedSavedCandidates = [...savedCandidates, candidate];
       setSavedCandidates(updatedSavedCandidates);
       localStorage.setItem("savedCandidates", JSON.stringify(updatedSavedCandidates));
