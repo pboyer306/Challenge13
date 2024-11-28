@@ -5,4 +5,17 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   envDir: './env',
   plugins: [react()],
+  build: {
+    target: 'esnext',
+    outDir: 'dist',
+    sourcemap: true,
+  },
+  server: {
+    port: 3000,
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 });
