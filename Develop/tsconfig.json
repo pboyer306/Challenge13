@@ -7,25 +7,18 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false, // Changed to false to emit JavaScript files
+    "noEmit": true,
     "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Output and Paths */
-    "baseUrl": "./", 
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "outDir": "dist" // Ensure output directory is set
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
