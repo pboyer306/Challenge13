@@ -1,4 +1,4 @@
-import * as ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 
@@ -7,18 +7,21 @@ import CandidateSearch from './pages/CandidateSearch.tsx';
 import SavedCandidates from './pages/SavedCandidates.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
 
+
+
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <App />,  
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: <CandidateSearch />,
+        element: <CandidateSearch />, 
       },
       {
-        path: '/SavedCandidates',
+        path: 'saved',
         element: <SavedCandidates />,
       },
     ],

@@ -1,116 +1,66 @@
 import { useState, useEffect } from 'react';
-import { searchGithub, searchGithubUser } from '../api/API';
-
-import { Candidate } from "../interfaces/Candidate.interface";
-
-
-const [loading, setLoading] = useState<boolean>(false); //makes setLoading work
-const [username, setUsername] = useState<string>(''); //makes username work
-
+import { searchGithub } from '../api/API';
+import { Candidate } from '../interfaces/Candidate.interface';
+import Nav from '../components/Nav';
 
 const CandidateSearch = () => {
-    const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(null);
-    const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
-    const [remainingCandidates, setRemainingCandidates] = useState<Candidate[]>([]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(null);
+  const [potentialCandidates, setPotentialCandidates] = useState<Candidate[]>([]);
+  const [index, setIndex] = useState(0);
 
-    useEffect(() => {
-      const fetchCandidates = async () => {
-        try {
-          const candidates = await searchGithub();
-          setRemainingCandidates(candidates);
-          if (candidates.length > 0) {
-            setCurrentCandidate(candidates[0]);
-          }
-        } catch (error) {
-          console.error("Error fetching candidates:", error);
-        }
-      };
-      fetchCandidates();
-    }, []);
-
-    const saveCandidate = (candidate: Candidate) => {
-      const updatedSavedCandidates = [...savedCandidates, candidate];
-      setSavedCandidates(updatedSavedCandidates);
-      localStorage.setItem("savedCandidates", JSON.stringify(updatedSavedCandidates));
+  useEffect(() => {
+    const loadCandidates = async () => {
+      const fetchedCandidates: Candidate[] = await searchGithub();
+      setCandidates(fetchedCandidates);
+      setCurrentCandidate(fetchedCandidates[0] || null);
     };
+    loadCandidates();
+  }, []);
 
-    const handleAccept = () => {
-      if (currentCandidate) {
-        saveCandidate(currentCandidate);
-        showNextCandidate();
-      }
-    };
-
-    const handleReject = () => {
+  const saveCandidate = () => {
+    if (currentCandidate) {
+      const updatedCandidates = [...potentialCandidates, currentCandidate];
+      setPotentialCandidates(updatedCandidates);
+      localStorage.setItem('potentialCandidates', JSON.stringify(updatedCandidates));
       showNextCandidate();
-    };
-
-    const showNextCandidate = () => {
-      const updatedCandidates = remainingCandidates.slice(1);
-      setRemainingCandidates(updatedCandidates);
-      setCurrentCandidate(updatedCandidates.length > 0 ? updatedCandidates[0] : null);
-    };
-
-    const handleSearch = async () => {
-      if (username.trim() === '') {
-        return;
-      }
-  
-      setLoading(true);
-      try {
-        const user = await searchGithubUser(username);
-        setCurrentCandidate(user);
-        setRemainingCandidates([]);
-      } catch (error) {
-        console.error("Error searching for user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    return (
-      <div>
-        <h1>Candidate Search</h1>
-        
-        <input 
-          type="text" 
-          placeholder="Enter GitHub username" 
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <button onClick={handleSearch}>Search</button>
-        
-        {loading ? (
-          <p>Loading candidates...</p>
-        ) : (
-          <>
-            {currentCandidate ? (
-              <div>
-                <img
-                  src={currentCandidate.avatar_url}
-                  alt={`${currentCandidate.name}'s avatar`}
-                  style={{ width: '150px', borderRadius: '50%' }}
-                />
-                <h2>{currentCandidate.name}</h2>
-                <p><strong>Username:</strong> {currentCandidate.login}</p>
-                <p><strong>Location:</strong> {currentCandidate.location || 'Not provided'}</p>
-                <p><strong>Email:</strong> {currentCandidate.email || 'Not provided'}</p>
-                <p><strong>Company:</strong> {currentCandidate.company || 'Not provided'}</p>
-                <a href={currentCandidate.html_url} target="_blank" rel="noopener noreferrer">
-                  GitHub Profile
-                </a>
-                <div>
-                  <button onClick={handleAccept}>+</button>
-                  <button onClick={handleReject}>-</button>
-                </div>
-              </div>
-            ) : (
-              <p>{remainingCandidates.length === 0 ? "No more candidates available." : "Loading..."}</p>
-            )}
-          </>
-        )}
-      </div>
-    );
+    }
   };
-  
-  export default CandidateSearch;
+
+  const showNextCandidate = () => {
+    const nextIndex = index + 1;
+    if (nextIndex < candidates.length) {
+      setIndex(nextIndex);
+      setCurrentCandidate(candidates[nextIndex]);
+    } else {
+      setCurrentCandidate(null);
+    }
+  };
+
+  return (
+    <div>
+      <Nav /> {/* Render Nav component here */}
+      <h1>Candidate Search</h1>
+      {currentCandidate ? (
+        <div>
+          <img src={currentCandidate.avatar_url} alt={`${currentCandidate.login}'s avatar`} />
+          <h2>{currentCandidate.login}</h2>
+          <p>Username: {currentCandidate.login}</p>
+          <p>Location: {currentCandidate.location || "Location not available"}</p>
+          <p>Email: {currentCandidate.email || "Email not available"}</p>
+          <p>Company: {currentCandidate.company || "Company not available"}</p>
+          <a href={currentCandidate.html_url} target="_blank" rel="noopener noreferrer">
+            GitHub Profile
+          </a>
+          <button onClick={saveCandidate}>+</button>
+          <button onClick={showNextCandidate}>-</button>
+        </div>
+      ) : (
+        <p>No more candidates available to review.</p>
+      )}
+    </div>
+  );
+};
+
+export default CandidateSearch;
+

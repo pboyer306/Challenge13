@@ -4,9 +4,9 @@ import Nav from './components/Nav';
 function App() {
   return (
     <>
-      <Nav />
+      <Nav /> {/* Nav will render once, at the top of the layout */}
       <main>
-        <Outlet />
+        <Outlet /> {/* Children routes will render here */}
       </main>
     </>
   );
