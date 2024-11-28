@@ -7,11 +7,11 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node", // "bundler" can sometimes cause issues with older packages
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true, // Prevents .js files from being emitted
+    "noEmit": false, // Changed to false to emit JavaScript files
     "jsx": "react-jsx",
 
     /* Linting */
@@ -21,10 +21,11 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Output and Paths */
-    "baseUrl": "./", // Enables absolute imports
+    "baseUrl": "./", 
     "paths": {
-      "@/*": ["src/*"] // Supports aliasing
-    }
+      "@/*": ["src/*"]
+    },
+    "outDir": "dist" // Ensure output directory is set
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
