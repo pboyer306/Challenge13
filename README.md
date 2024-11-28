@@ -1,4 +1,4 @@
-# Challenge12React
+# Challenge13 Candidate Search
 bootcamp challenge 13 Candidate Search Portal (transfer from the standard VS code file)
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
